@@ -2,8 +2,8 @@
 
 // --- Configuration ---
 // !! VERIFY THESE PATHS !! Use `which yt-dlp` and `which ffmpeg`
-define('YTDLP_PATH', '/usr/local/bin/yt-dlp'); // Common yt-dlp path
-define('FFMPEG_PATH', '/bin/ffmpeg'); // Path for direct FFmpeg cutting command
+define('YTDLP_PATH', '/usr/local/bin/yt-dlp'); // yt-dlp path (pip install location)
+define('FFMPEG_PATH', '/usr/bin/ffmpeg'); // Path for direct FFmpeg cutting command
 // Directory for final videos, relative to this script's location
 define('DEFAULT_OUTPUT_FOLDER', 'youtube_downloads');
 // Directory for temporary FULL downloads
