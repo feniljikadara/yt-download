@@ -345,6 +345,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                      " --no-playlist" .
                      " --no-overwrites" . // Changed from --no-overwrite to --no-overwrites for yt-dlp
                      " --no-progress" .
+                     " --user-agent \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\"" .
+                     " --extractor-args \"youtube:player_client=android\"" .
                      " -v" . // Keep verbose for debugging download issues
                      " " . escapeshellarg($youtubeUrl);
 
