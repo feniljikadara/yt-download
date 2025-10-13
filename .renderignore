@@ -1,0 +1,11 @@
+*.pdf
+*.xlsx
+*.json
+*.zip
+*.HEIC
+*.heic
+*.app
+*.DS_Store
+youtube_downloads/
+temp_yt_downloads/
+*.log
