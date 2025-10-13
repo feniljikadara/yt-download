@@ -8,6 +8,8 @@ define('FFMPEG_PATH', '/bin/ffmpeg'); // Path for direct FFmpeg cutting command
 define('DEFAULT_OUTPUT_FOLDER', 'youtube_downloads');
 // Directory for temporary FULL downloads
 define('TEMP_DOWNLOAD_DIR', __DIR__ . '/temp_yt_downloads');
+// YouTube cookies file path (optional, for bypassing bot detection)
+define('YOUTUBE_COOKIES_PATH', __DIR__ . '/youtube_cookies.txt');
 // Base yt-dlp format selection (gets best MP4 video/audio, falls back)
 define('YTDLP_DEFAULT_FORMAT', 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]');
 // Set higher limits for potentially long operations
@@ -341,8 +343,17 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ytDlpArgs = "-o " . escapeshellarg($tempOutputPathTemplate) .
                      " -f " . escapeshellarg(YTDLP_DEFAULT_FORMAT) .
                      " --merge-output-format mp4" .
-                     " --ffmpeg-location " . escapeshellarg(FFMPEG_PATH) . // Path to ffmpeg for merging
-                     " --no-playlist" .
+                     " --ffmpeg-location " . escapeshellarg(FFMPEG_PATH); // Path to ffmpeg for merging
+        
+        // Add cookies if file exists
+        if (file_exists(YOUTUBE_COOKIES_PATH) && is_readable(YOUTUBE_COOKIES_PATH)) {
+            $ytDlpArgs .= " --cookies " . escapeshellarg(YOUTUBE_COOKIES_PATH);
+            writeToLog("Using cookies file: " . YOUTUBE_COOKIES_PATH);
+        } else {
+            writeToLog("Warning: Cookies file not found at " . YOUTUBE_COOKIES_PATH . ". May encounter bot detection.");
+        }
+        
+        $ytDlpArgs .= " --no-playlist" .
                      " --no-overwrites" . // Changed from --no-overwrite to --no-overwrites for yt-dlp
                      " --no-progress" .
                      " --user-agent \"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36\"" .
