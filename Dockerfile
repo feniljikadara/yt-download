@@ -15,17 +15,17 @@ WORKDIR /app
 
 # Copy application files
 COPY yt-downloader.php .
+COPY setup_cookies.sh .
+
+# Make setup script executable
+RUN chmod +x setup_cookies.sh
 
 # Create required directories
 RUN mkdir -p youtube_downloads temp_yt_downloads && \
     chmod 777 youtube_downloads temp_yt_downloads
 
-# Update paths in the PHP file for Docker environment
-RUN sed -i "s|'/usr/local/bin/yt-dlp'|'/usr/local/bin/yt-dlp'|g" yt-downloader.php && \
-    sed -i "s|'/bin/ffmpeg'|'/usr/bin/ffmpeg'|g" yt-downloader.php
-
 # Expose port
 EXPOSE 10000
 
-# Start PHP built-in server
-CMD ["php", "-S", "0.0.0.0:10000", "yt-downloader.php"]
+# Run setup script and start PHP server
+CMD ./setup_cookies.sh && php -S 0.0.0.0:10000 yt-downloader.php
