@@ -60,11 +60,21 @@ function executeExternalCommand($command_path, $arguments_string) {
 
     if ($return_var !== 0) {
         writeToLog("Command Execution Failed (Return Code: $return_var). Full Output:\n" . $full_output);
+        
+        // Check for executable not found
         if ($return_var === 127 || stripos($full_output, 'No such file or directory') !== false || stripos($full_output, 'not found') !== false ) {
             if (stripos($full_output, $command_path) !== false && (stripos($full_output, 'No such file or directory') !== false || stripos($full_output, 'not found') !== false)) {
                 return "Command execution failed: Executable not found or inaccessible. Path used: '$command_path'. Verify path, OS permissions, CageFS, SELinux.";
             }
         }
+        
+        // For Python tracebacks, capture more context
+        if (stripos($full_output, 'Traceback') !== false) {
+            // Get last 10 lines for better error context
+            $last_lines = array_slice($output_lines, -10);
+            return "Command failed: " . implode(" | ", $last_lines);
+        }
+        
         $error_message = "Command failed with exit code $return_var.";
         foreach (array_reverse($output_lines) as $line) {
             // Added common ffmpeg errors
@@ -72,7 +82,7 @@ function executeExternalCommand($command_path, $arguments_string) {
                 $error_message = "Command failed: " . trim($line); break;
             }
         }
-        if ($error_message === "Command failed with exit code $return_var.") { $error_message .= " Check full output in log. Preview: " . substr(preg_replace('/\s+/', ' ', $full_output), 0, 300); }
+        if ($error_message === "Command failed with exit code $return_var.") { $error_message .= " Check full output in log. Preview: " . substr(preg_replace('/\s+/', ' ', $full_output), 0, 500); }
         return $error_message;
     }
     return null; // Success
