@@ -10,8 +10,9 @@ define('DEFAULT_OUTPUT_FOLDER', 'youtube_downloads');
 define('TEMP_DOWNLOAD_DIR', __DIR__ . '/temp_yt_downloads');
 // YouTube cookies file path (optional, for bypassing bot detection)
 define('YOUTUBE_COOKIES_PATH', __DIR__ . '/youtube_cookies.txt');
-// Base yt-dlp format selection (gets best MP4 video/audio, falls back)
-define('YTDLP_DEFAULT_FORMAT', 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]');
+// Base yt-dlp format selection (flexible for Shorts and regular videos)
+// Tries: 1) Best mp4 video+audio, 2) Best mp4, 3) Best video+audio, 4) Best overall
+define('YTDLP_DEFAULT_FORMAT', 'bestvideo[ext=mp4]+bestaudio[ext=m4a]/best[ext=mp4]/bestvideo+bestaudio/best');
 // Set higher limits for potentially long operations
 // !! Ensure these values (or higher) are also set in php.ini / FPM config !!
 define('MAX_EXECUTION_TIME', 1200); // 20 minutes (needs to cover FULL download + cut)
