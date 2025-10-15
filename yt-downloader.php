@@ -351,10 +351,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $tempOutputPathTemplate = TEMP_DOWNLOAD_DIR . '/' . $videoId . '.%(ext)s';
 
         // Construct basic yt-dlp command for full download
+        // Use simple 'best' format for maximum compatibility with Shorts
         $ytDlpArgs = "-o " . escapeshellarg($tempOutputPathTemplate) .
-                     " -f " . escapeshellarg(YTDLP_DEFAULT_FORMAT) .
-                     " --merge-output-format mp4" .
-                     " --ffmpeg-location " . escapeshellarg(FFMPEG_PATH); // Path to ffmpeg for merging
+                     " -f best" .  // Just get the best available format
+                     " --recode-video mp4" .  // Re-encode to mp4 if needed
+                     " --ffmpeg-location " . escapeshellarg(FFMPEG_PATH); // Path to ffmpeg
         
         // Add cookies if file exists
         if (file_exists(YOUTUBE_COOKIES_PATH) && is_readable(YOUTUBE_COOKIES_PATH)) {
